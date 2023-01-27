@@ -4,6 +4,8 @@ body {
     font-family: 'Poppins', sans-serif;
     font-size: 40px;
     color: aliceblue;
+    margin: 0;
+    padding: 0;
 }
 
 .container {
@@ -12,14 +14,14 @@ body {
 }
 
 .upper-elements {
-    margin-top: 7%;
+    padding-top: 7%;
     display: flex;
     justify-content: space-between;
     align-items: baseline;
 }
 
 .time {
-    font-size: 10rem;
+    font-size: 7.2rem;
     font-weight: 100;
 
 }
@@ -41,4 +43,13 @@ body {
     border: solid 2px;
     border-radius: 10px;
     padding: 2rem;
+}
+
+#preloader {
+    background: #000 url(images/spinner.gif) no-repeat center center;
+    background-size: 15%;
+    height: 100vh;
+    width: 100%;
+    position: fixed;
+    z-index: 100;
 }
