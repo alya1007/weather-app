@@ -22,8 +22,12 @@ getWeatherData();
 function showWeather(data){
     let {temp, humidity, pressure} = data.main;
     let {deg, gust, speed} = data.wind;
-    document.getElementById("weather").innerHTML = `${temp}°C`
-    document.getElementById("wind").innerHTML = `${speed} m/s`
+    document.getElementById("temperature").innerHTML = `Temperature: ${temp}°C`
+    document.getElementById("humidity").innerHTML = `Humidity: ${humidity}%`
+    document.getElementById("pressure").innerHTML = `Pressure: ${pressure}`
+    document.getElementById("deg").innerHTML = `Degree: ${deg}`
+    document.getElementById("gust").innerHTML = `Gust: ${gust} m/s`
+    document.getElementById("speed").innerHTML = `Speed: ${speed} m/s`
 }
 
 var loader = document.getElementById("preloader");
