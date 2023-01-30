@@ -2,35 +2,79 @@ const API_KEY = "8b81c91f17aa506a7ac933925035c1a4";
 const lon = 46.87;
 const lat = 29.23;
 
-function getTime(){
-    var dateWithouthSecond = new Date();
-    return dateWithouthSecond.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+function createWeatherCard(title, valueTitles, elements) {
+  const weatherCard = document.createElement("div");
+  weatherCard.classList.add("weather");
+  weatherCard.innerHTML = `
+    <div class="weather-title">${title}</div>
+    `;
+  for (let i = 0; i < elements.length; i++) {
+    weatherCard.appendChild(createWeatherItem(elements[i], valueTitles[i]));
+  }
+
+  return weatherCard;
 }
 
-document.getElementById("time").innerHTML = getTime();
-
-function getWeatherData(){
-    fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&exclude=hourly,minutely&units=metric&appid=${API_KEY}`).then(res => res.json()).then(data => {
-        hideLoadingScreen();
-        console.log(data);
-        showWeather(data);
-    })
+function createWeatherItem(data, title) {
+  const weatherItem = document.createElement("div");
+  weatherItem.classList.add("weather-item");
+  weatherItem.id = title;
+  weatherItem.textContent = `${title}: ${data}`;
+  return weatherItem;
 }
 
+function getTime() {
+  let dateWithoutSecond = new Date();
+  document.getElementById("time").textContent =
+    dateWithoutSecond.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+}
+
+getTime();
+
+async function getWeatherData() {
+  const weatherTitles = ["Temperature", "Humidity", "Pressure"];
+  const windTitles = ["Degree", "Gust", "Speed"];
+
+  const weatherContent = document.querySelector(".weather-content");
+  try {
+    const res = await fetch(
+      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&exclude=hourly,minutely&units=metric&appid=${API_KEY}`
+    );
+    const data = await res.json();
+    console.log(data);
+    const weatherElements = getWeatherElements(data);
+    const windElements = getWindElements(data);
+    weatherContent.appendChild(
+      createWeatherCard("Weather", weatherTitles, weatherElements)
+    );
+    weatherContent.appendChild(
+      createWeatherCard("Wind", windTitles, windElements)
+    );
+  } catch (error) {
+    console.error(error);
+    weatherContent.appendChild(createErrorElement());
+  }
+}
 getWeatherData();
 
-function showWeather(data){
-    let {temp, humidity, pressure} = data.main;
-    let {deg, gust, speed} = data.wind;
-    document.getElementById("temperature").innerHTML = `Temperature: ${temp}°C`
-    document.getElementById("humidity").innerHTML = `Humidity: ${humidity}%`
-    document.getElementById("pressure").innerHTML = `Pressure: ${pressure}`
-    document.getElementById("deg").innerHTML = `Degree: ${deg}`
-    document.getElementById("gust").innerHTML = `Gust: ${gust} m/s`
-    document.getElementById("speed").innerHTML = `Speed: ${speed} m/s`
+function getWeatherElements(data) {
+  let { temp, humidity, pressure } = data.main;
+  let values = [temp, humidity, pressure];
+  return values;
 }
 
-var loader = document.getElementById("preloader");
-function hideLoadingScreen(){
-    loader.style.display = "none";
+function getWindElements(data) {
+  let { deg, gust, speed } = data.wind;
+  let values = [deg, gust, speed];
+  return values;
+}
+
+function createErrorElement() {
+  const errorElement = document.createElement("div");
+  errorElement.classList.add("error");
+  errorElement.textContent = "Error";
+  return errorElement;
 }
