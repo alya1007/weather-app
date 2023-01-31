@@ -5,13 +5,13 @@ const lat = 29.23;
 function createWeatherCard(title, valueTitles, elements) {
   const weatherCard = document.createElement("div");
   weatherCard.classList.add("weather");
-  weatherCard.innerHTML = `
-    <div class="weather-title">${title}</div>
-    `;
+  const weatherTitle = document.createElement("div");
+  weatherTitle.classList.add("weather-title");
+  weatherTitle.textContent = title;
+  weatherCard.appendChild(weatherTitle);
   for (let i = 0; i < elements.length; i++) {
     weatherCard.appendChild(createWeatherItem(elements[i], valueTitles[i]));
   }
-
   return weatherCard;
 }
 
@@ -23,7 +23,7 @@ function createWeatherItem(data, title) {
   return weatherItem;
 }
 
-function getTime() {
+function setTime() {
   let dateWithoutSecond = new Date();
   document.getElementById("time").textContent =
     dateWithoutSecond.toLocaleTimeString([], {
@@ -32,7 +32,7 @@ function getTime() {
     });
 }
 
-getTime();
+setTime();
 
 async function getWeatherData() {
   const weatherTitles = ["Temperature", "Humidity", "Pressure"];
